@@ -1,5 +1,7 @@
 `imgSketch` replaces HTML `img` elements with human-editable vector graphics data specified in a Query String. There are not many use cases for such functionality since SVG images can be embedded in the HTML document, encoded as a Data URL, or simply fetched from a server. However, `imgSketch` could be useful in some situations.
 
+A overview of features can be seen at: <https://deverac.github.io/imgsketch/>
+
 ## Developer info
 
 `imgSketch` is a single Javascript file. Use of `npm` is optional and is only needed to:
