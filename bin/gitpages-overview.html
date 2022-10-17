@@ -1,0 +1,822 @@
+<html>
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: lightblue;
+    }
+
+    img {
+      border: 1px black solid;
+    }
+
+    table,
+    td,
+    th {
+      border: 1px solid black;
+    }
+
+    table {
+      border-spacing: 0;
+    }
+
+    td,
+    th {
+      padding: 3px;
+    }
+
+    th {
+      background-color: darkgray;
+    }
+  </style>
+
+  <script src="imgsketch.js"></script>
+</head>
+
+<body onload="imgSketch.init();">
+  <br>
+  <h1>imgSketch</h1>
+
+  <p>
+    imgSketch allows encoding human-editable vector data in a Query String of an '<tt>img</tt>' element attribute. E.g.
+  </p>
+
+  <pre>
+    &lt;img class='pgon' data-src='?z='&gt;
+</pre>
+
+  <p>
+    The vector data will be used to generate an image which will then be set as the '<tt>img</tt>' source.
+  </p>
+
+  <p>
+    To enable imgSketch:
+  </p>
+
+  <ol>
+
+    <li> include the '<tt>imgsketch-min.js</tt>' Javascript file.
+      <pre>
+    &lt;script src="imgsketch-min.js"&gt;&lt;/script&gt; 
+</pre>
+    </li>
+
+    <li>In the '<tt>body</tt>' tag, add '<tt>imgSketch.init()</tt>'.
+      <pre>
+    &lt;body onload="imgSketch.init();"&gt;
+</pre>
+
+    </li>
+
+  </ol>
+
+  <p>Alternately, instead of using '<tt>onload=...</tt>', add the following to
+    a '<tt>&lt;script&gt;...&lt;/script&gt;</tt>':</p>
+  <pre>
+    window.onload = (event) => {
+        imgSketch.init();
+    };
+</pre>
+
+
+  <p>
+    The '<tt>init()</tt>' method takes two, optional parameters.
+  </p>
+
+  <pre>
+    imgSketch.init(className, attributeName);
+</pre>
+
+  <p>
+    The first parameter, '<tt>className</tt>' is the class name which is used to select the '<tt>img</tt>' elements to
+    operate on; the default is '<tt>pgon</tt>'. The second parameter '<tt>attributeName</tt>' is the attribute name which contains
+    the Query String. If not specified, the '<tt>data-src</tt>' attribute name will be searched. If
+    '<tt>data-src</tt>' does not exist, the '<tt>src</tt>' attribute name will be searched.
+  </p>
+
+  <p>
+    If the '<tt>src</tt>' attribute contains the Query String,
+    the browser will attempt to fetch an image from the server (which is normal browser behavior).
+    To avoid this, '<tt>data-src</tt>', or some other attribute name can be used.
+  </p>
+
+  <p>
+    The following shapes are supported. (The '<tt>pad=10</tt>' option is used in the examples below, but for clarity is not displayed.)
+  </p>
+
+
+  <table>
+    <tr>
+      <th>Picture</th>
+      <th>Z-Field</th>
+      <th>Shape</th>
+      <th>Fields</th>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?pad=10&z=c20,20" /></td>
+      <td>?z=c20,20</td>
+      <td>Circle</td>
+      <td>c=circle<br>20,20=offset</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?pad=10&z=l20,20" /></td>
+      <td>?z=l20,20</td>
+      <td>Line</td>
+      <td>l=line<br>20,20=offset</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?pad=10&z=t20,20" /></td>
+      <td>?z=t20,20</td>
+      <td>Triangle</td>
+      <td>t=triangle<br>20,20=offset</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?pad=10&z=s20,20" /></td>
+      <td>?z=s20,20</td>
+      <td>Square</td>
+      <td>s=square<br>20,20=offset</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?pad=10&z=p20,20" /></td>
+      <td>?z=p20,20</td>
+      <td>Pentagon</td>
+      <td>p=pentagon<br>20,20=offset</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?pad=10&z=h20,20" /></td>
+      <td>?z=h20,20</td>
+      <td>Hexagon</td>
+      <td>h=hexagon<br>20,20=offset</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?pad=10&z=e20,20" /></td>
+      <td>?z=e20,20</td>
+      <td>hEeptagon</td>
+      <td>e=heptagon<br>20,20=offset</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?pad=10&z=o20,20" /></td>
+      <td>?z=o20,20</td>
+      <td>Octogon</td>
+      <td>o=octagon<br>20,20=offset</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?pad=10&z=m0-4,5_20,30_39,15_45,30_55,10_30,0" /></td>
+      <td>?z=m0-4,5_20,30_39,15_45,30_55,10_30,0</td>
+      <td>Multigon</td>
+      <td>m=multigon<br>0=offset (Shortcut for (0,0))<br>-=Skip to Extra<br>4,5_20,30_39,15_45,30_55,10_30,0=xy points</td>
+    </tr>
+
+  </table>
+
+  <p>
+    Each shape can be modified in the following ways:
+  </p>
+
+
+  <table>
+
+    <tr>
+      <th>Picture</th>
+      <th>Z-Field</th>
+      <th>Description</th>
+      <th>Fields</th>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?pad=10&z=t20,20" /></td>
+      <td>?z=t20,20</td>
+      <td>A shape</td>
+      <td>t=triangle<br>20,20=offset</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?pad=10&z=tr20,20" /></td>
+      <td>z=tr20,20</td>
+      <td>A red shape</td>
+      <td>t=triangle<br>r=red<br>20,20=offset</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?pad=10&z=tR20,20" /></td>
+      <td>z=tR20,20</td>
+      <td>A filled red shape</td>
+      <td>t=triangle<br>R=filled red<br>20,20=offset</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?pad=10&z=T20,20" /></td>
+      <td>z=T20,20</td>
+      <td>An open shape</td>
+      <td>T=open triangle<br>20,20=offset</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?pad=10&z=t20,20g" /></td>
+      <td>z=t20,20g</td>
+      <td>A thick shape</td>
+      <td>t=triangle<br>20,20=offset<br>g=linewidth(7)</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?pad=10&z=t20,20__45" /></td>
+      <td>z=t20,20__45</td>
+      <td>A z-rotated shape</td>
+      <td>t=triangle<br>20,20=offset<br>45=z-degrees CW</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?pad=10&z=t20,20__,60" /></td>
+      <td>z=t20,20__,60</td>
+      <td>A y-rotated shape</td>
+      <td>t=triangle<br>20,20=offset<br>60=y-degrees CW</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?pad=10&z=t20,20__,,60" /></td>
+      <td>z=t20,20__,,60</td>
+      <td>A x-rotated shape</td>
+      <td>t=triangle<br>20,20=offset<br>60=x-degrees CW</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?pad=10&z=t35,35_65" /></td>
+      <td>z=tr35,35_65</td>
+      <td>A large shape</td>
+      <td>t=triangle<br>35,35=offset<br>65=size</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?pad=10&z=0.5t35,35" /></td>
+      <td>z=0.5t35,35</td>
+      <td>A scaled shape</td>
+      <td>0.5=scale<br>t=triangle<br>35,35=offset</td>
+    </tr>
+
+  </table>
+
+
+  <p>
+    Circles are a special case and can be used to draw ellipses.
+  </p>
+
+  <table>
+
+    <tr>
+      <th>Picture</th>
+      <th>Z-Field</th>
+      <th>Description</th>
+      <th>Fields</th>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?pad=10&z=c20,20-45,160" /></td>
+      <td>?z=c20,20-45,160</td>
+      <td>Wedge</td>
+      <td>c=circle<br>20,20=offset<br>-=skip to Extra<br>45,160=degrees</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?pad=10&z=C20,20-45,160" /></td>
+      <td>?z=C20,20-45,160</td>
+      <td>Open arc</td>
+      <td>C=open circle<br>20,20=offset<br>-=skip to Extra<br>45,160=degrees</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?pad=10&z=c20,20__,60" /></td>
+      <td>?z=c20,20__,60</td>
+      <td>y-rotated circle</td>
+      <td>c=circle<br>20,20=offset<br>,60=rotate y-degrees CW</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?pad=10&z=c20,20__,,60" /></td>
+      <td>?z=c20,20__,,60</td>
+      <td>x-rotated cirle</td>
+      <td>c=circle<br>20,20=offset<br>,,60=rotate x-degrees CW</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?pad=10&z=c20,20__45,,60" /></td>
+      <td>?z=c20,20__45,,60</td>
+      <td>z- and x-rotated circle</td>
+      <td>c=circle<br>20,20=offset<br>45,,60=rotate z- and x-degrees CW</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?pad=10&z=C20,20__45,,60_-25,240" /></td>
+      <td>?z=C20,20__45,,60_-25,240</td>
+      <td>Partial arc</td>
+      <td>c=circle<br>20,20=offset<br>45,,60=rotate z- and x-degrees CW<br>-25,240=Arc</td>
+    </tr>
+  </table>
+
+
+  <p>
+    Drawing text is supported with the following restrictions:
+  </p>
+
+  <ul>
+    <li>Rotate y and rotate z have no effect.
+    <li>Semantics of color is reversed: lowercase letter is used to fill text, while uppercase letter is used to outline.
+    <li>Linewidth only applies when capital letter is used for the color.
+  </ul>
+
+
+  <table>
+    <tr>
+      <th>Picture</th>
+      <th>Z-Field</th>
+      <th>Description</th>
+      <th>Fields</th>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?z=x40,10-Hello&pad=10" /></td>
+      <td>?z=x40,10-Hello</td>
+      <td>Text</td>
+      <td>x=text<br>45,10=offset<br>-=skip to Extra<br>Hello=text string</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?z=xg40,10-Hello&pad=10" /></td>
+      <td>?z=xg40,10-Hello</td>
+      <td>Colored Text</td>
+      <td>x=text<br>g=filled green<br>40,10=offset<br>-=skip to Extra<br>Hello=text string</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?z=xG40,10a-Hello&pad=10" /></td>
+      <td>?z=xG40,10a-Hello</td>
+      <td>Outline text</td>
+      <td>x=text<br>G=green outline<br>40,10=offset<br>a=linewidth(1)<br>-=skip to Extra<br>Hello=text string</td>
+    </tr>
+
+
+    <tr>
+      <td><img class='pgon' data-src="?z=x40,10__sHello&pad=10" /></td>
+      <td>?z=x40,10__sHello</td>
+      <td>Serif font</td>
+      <td>x=text<br>40,10=offset<br>_=linewidth<br>_=flag<br>s=serif<br>Hello=text string</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?z=x40,10__nHello&pad=10" /></td>
+      <td>?z=x40,10__nHello</td>
+      <td>Sans-serif font</td>
+      <td>x=text<br>40,10=offset<br>_=linewidth<br>_=flag<br>n=sans-serif<br>Hello=text string</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?z=x40,10__mHello&pad=10" /></td>
+      <td>?z=x40,10__mHello</td>
+      <td>Monospace font</td>
+      <td>x=text<br>40,10=offset<br>_=linewidth<br>_=flag<br>m=monospace<br>Hello=text string</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?z=x50,10-He-llo&pad=10" /></td>
+      <td>?z=x50,10-He-llo</td>
+      <td>Space ('-'=space)</td>
+      <td>x=text<br>50,10=offset<br>-=skip to Extra<br>He-llo=text string</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?z=x50,10-He%7ello&pad=10" /></td>
+      <td>?z=x50,10-He%7ello</td>
+      <td>ASCII char ('%7e'='~')</td>
+      <td>x=text<br>50,10=offset<br>-=skip to Extra<br>He%7ello=text string</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?z=x40,20-Hello~~World&pad=10" /></td>
+      <td>?z=x40,20-Hello~~World</td>
+      <td>Multiline ('~~'=newline)</td>
+      <td>x=text<br>40,20=offset<br>-=skip to Extra<br>Hello~~World=text string</td>
+    </tr>
+
+  </table>
+
+  <p>
+    When specifying the text to be displayed, the only valid characters are:
+  </p>
+
+  <ul>
+    <li>letters (a-z, A-Z)
+    <li>numbers (0-9)
+    <li>tilde (~)
+    <li>dash (-)
+    <li>period (.)
+    <li>underscore (_)
+  </ul>
+
+  <p>
+    Note that 'space' is not included in the list above. To be a valid
+    Query String,
+    any character that is not in the list above must be encoded as a two-character
+    ASCII code prefixed with a percent ('<tt>%</tt>') character, however
+    some browsers may allow and correctly interpret non-valid characters.
+  </p>
+
+  <p>
+    For convenience, when specifying text, two consecutive tilde characters
+    ('<tt>~~</tt>`) will be converted to a newline,
+    and each dash ('<tt>-</tt>`) will be converted to a space.
+  </p>
+
+
+  <h3>Query String Parameters</h3>
+
+  <p>
+    Vector data is defined using the '<tt>z</tt>' and '<tt>zN</tt>' query string parameters.
+    Other query string parameters can be specified to control imgSketch behavior.
+  </p>
+
+  <table>
+    <tr>
+      <th>Parameter</th>
+      <th>Z-Field</th>
+      <th>Description</th>
+    </tr>
+
+    <tr>
+      <td>bg</td>
+      <td>c, nnnnnn</td>
+      <td>Background color of image. The color can be a letter from the color dictionary (e.g. 'g') or can be a six-character hex value.</td>
+    </tr>
+
+    <tr>
+      <td>color</td>
+      <td>c, nnnnnn</td>
+      <td>Set default drawing color. The color can be a letter from the color dictionary (e.g. 'g') or can be a six-character hex value.</td>
+    </tr>
+
+    <tr>
+      <td>colord</td>
+      <td>nnnnnn,nnnnnn,...</td>
+      <td>Specify colors for the color dictionary. This allows replacing any number
+        of colors in the color dictionary. e.g. '<tt>colord=,,,aabbcc</tt>' will set the 'd' slot to '#aabbcc'.
+        If twenty-six colors are specified, the entire color dictionary will be replaced.
+      </td>
+    </tr>
+
+    <tr>
+      <td>cxz</td>
+      <td>nnnnnn,nnnnnn</td>
+      <td>Specify colors for the 'x', and/or 'z' entry of the color dictionary.
+        The color dictionary contains 24 colors. Two letters, x and z are not used. the
+        '<tt>cxz</tt>' parameter provides an easy way to define a color for the x and z slots.
+        e.g. '<tt>cxz=a1111c</tt>' will set the 'x' slot to '#a1111c'. '<tt>cxz=,e2222a</tt>' will set the 'z' slot to '#a1111c'.</td>
+    </tr>
+
+    <tr>
+      <td>dim</td>
+      <td>n OR 'x,y'</td>
+      <td>Set the image dimensions. (e.g. '<tt>dim=100,200</tt>') If a single value is specified, it will be used for both dimensions.
+        If '<tt>dim</tt>' is set, it will override the automatically computed value for the image dimensions.</td>
+    </tr>
+
+    <tr>
+      <td>family</td>
+      <td>m,n,s</td>
+      <td>Set the default font-family.</td>
+    </tr>
+
+    <tr>
+      <td>help</td>
+      <td>n</td>
+      <td>Display help. The vector data is ignored. Instead the generated image will be a page of imgSketch help. (See <b>Examples</b> below.)</td>
+    </tr>
+
+    <tr>
+      <td>linewidth</td>
+      <td>a-z</td>
+      <td>Set the default linewidth. '<tt>a</tt>'=1, '<tt>b</tt>'=2, '<tt>c</tt>'=3, etc.</td>
+    </tr>
+
+    <tr>
+      <td>pad</td>
+      <td>n</td>
+      <td>Add padding to each edge of the image. This will increase the image dimensions, but only if '<tt>dim</tt>' has not been specified.</td>
+    </tr>
+
+    <tr>
+      <td>palette</td>
+      <td>1,2</td>
+      <td>Display the color palette. The vector data is ignored. Instead, the generated image will be a page containing the color dictionary
+        along with the color-letters.
+        If '<tt>1</tt>' is specified, the full color palette is shown. If '<tt>2</tt>' is specified, a subset is shown. (See <b>Examples</b> below.) The '<tt>help</tt>' parameter will override this parameter.</td>
+    </tr>
+
+    <tr>
+      <td>polysize</td>
+      <td>n</td>
+      <td>Set default size of polygons.</td>
+    </tr>
+
+    <tr>
+      <td>reload</td>
+      <td>n</td>
+      <td>Reload page after n seconds. n can be a float. This behavior can be useful to have the browser automatically reflect changes without having to manually refresh the page.</td>
+    </tr>
+
+    <tr>
+      <td>scaleimg</td>
+      <td>n</td>
+      <td>Scale the entire image by n.</td>
+    </tr>
+
+    <tr>
+      <td>textheight</td>
+      <td>n</td>
+      <td>Set the line height for multi-line text. (e.g. '<tt>textheight=2</tt>' will generate double-spaced text)</td>
+    </tr>
+
+    <tr>
+      <td>textsize</td>
+      <td>n</td>
+      <td>Set the default textsize.</td>
+    </tr>
+
+    <tr>
+      <td>z</td>
+      <td>Z-Fields</td>
+      <td>Define a polygon. See the <b>Z-Fields</b> table below.</td>
+    </tr>
+
+    <tr>
+      <td>zN</td>
+      <td>Z-Fields</td>
+      <td>Define a polygon which is drawn in layer N. N must be 1-9. (e.g. <tt>z1,z2,...,z9</tt>)
+        Polygons drawn in higher layers will overwrite polygons drawn in lower layers.
+    </tr>
+
+  </table>
+
+
+  <h3>Z-Fields</h3>
+
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Values</th>
+      <th>Description</th>
+    </tr>
+
+    <tr>
+      <td>Scale</td>
+      <td>n</td>
+      <td>Scale the polygon.</td>
+    </tr>
+
+    <tr>
+      <td>Shape</td>
+      <td>c,l,t,s,p,h,e,o,x,m</td>
+      <td>Polygon shape to draw. If capitalized, the final edge of the polygon will not be drawn.
+        c=circle, l=line, t=triangle, s=square, p=pentagon, h=hexagon, e=heptagon, o=octagon, x=text, m=multigon.
+      </td>
+    </tr>
+
+    <tr>
+      <td>Color</td>
+      <td>a-z</td>
+      <td>Color to use. If capitalized, the polygon will be filled with the specified color.
+        Letters 'x' and 'z' do not exist in the color dictionary, but can be added with the '<tt>cxz</tt>' or '<tt>colord</tt>' query string parameter.</td>
+    </tr>
+
+    <tr>
+      <td>Offset</td>
+      <td>'x,y'</td>
+      <td>Position of the center of the shape. All shapes are created and centered at (0,0).</td>
+    </tr>
+
+    <tr>
+      <td>Linewidth</td>
+      <td>a-z, _</td>
+      <td>Linewidth to draw the shape represented as a letter. 'a'=1, 'b'=2, 'c'=3, etc. '_'=Default</td>
+    </tr>
+
+    <tr>
+      <td>Size</td>
+      <td>n</td>
+      <td>Size of the polygon or text. Ignored for 'm' (Multi-gon).</td>
+    </tr>
+
+    <tr>
+      <td>Flag</td>
+      <td>_</td>
+      <td>Literal underscore character.</td>
+    </tr>
+
+    <tr>
+      <td>Rotate</td>
+      <td>'z,y,x'</td>
+      <td>Angles in degrees. Rotations do not preserve 3-D rotations; the z-value for points are always set to zero. This does not do 3-D rotations.</td>
+    </tr>
+
+    <tr>
+      <td>Family</td>
+      <td>m,n,s,_</td>
+      <td>Font family to use for text. This is only used for Text ('x'). 'm'=Monospace, 'n'=Sans-serif, 's'=Serif, '_'=Default</td>
+    </tr>
+
+    <tr>
+      <td>Extra</td>
+      <td>Arc OR Text OR XYPoints</td>
+      <td>Additional info, depending on the shape.
+        For a circle, Arc is optional and specifies the start and end in degrees. (e.g. '<tt>45,90</tt>') For Text, the actual text must be specified. (e.g. '<tt>Hello~~World</tt>')
+        For a Multigon, XYPoints specifies the x,y points of the multigon separated by underscores. (e.g. '<tt>2,3_20,3_20,30_10,20</tt>')
+      </td>
+    </tr>
+
+  </table>
+
+  <p>
+    A <b>Z-Field</b> is composed of the following fields, in order:
+  </p>
+
+  <pre>
+  Scale Shape Color Offset Linewidth Size Flag Rotate Family Extra
+</pre>
+
+  <p>
+    The fields are concatenated to give the following format:
+  </p>
+
+  <pre>
+  ShapeOffset_Size_Rotate_Extra     The 'Scale' and 'Color' fields are omitted.
+                                    The three underscores are the 'Linewidth', 'Flag', 'Family' fields.</pre>
+
+  <p>
+    Examples:
+  </p>
+
+  <pre>
+     t                A triangle at (0,0) with default size
+     t10,20           A triangle at (10,20) with default size
+     t10,20_30        A triangle at (10,20) with size 30
+     t10,20_30_15     A triangle at (10,20) with size 30 rotated 15 degrees about the z-axis
+     t10,20_30_,25    A triangle at (10,20) with size 30 rotated 25 degrees about the y-axis
+     t10,20_30_,,35   A triangle at (10,20) with size 30 rotated 35 degrees about the x-axis</pre>
+
+  <p>
+    To scale the shape, prepend the shape with the scale factor:
+  </p>
+
+  <pre>
+     2t10,20           A triangle at (10,20) with default size scaled by a factor of 2
+     0.5t10,20_30      A triangle at (10,20) with size 30 scaled by a factor of 0.5</pre>
+
+  <p>
+    To color the shape, insert the color value between the '<tt>Shape</tt>' field and the '<tt>Offset</tt>' field. Capitalizing the
+    color value will fill the shape with the specified color:
+  </p>
+
+  <pre>
+     tr10,20           A triangle at (10,20) that is drawn in red (r)
+     tR10,20           A triangle at (10,20) that is filled with the color red (R)
+</pre>
+
+  <p>
+    The first underscoore is the <tt>Linewidth</tt> field. If specified, the value must be
+    a lowercase letter. '<tt>a</tt>' corresponds to the linewidth of 1;
+    '<tt>z</tt>' corresponds to a linewidth value of 26.
+  </p>
+
+  <pre>
+     t10,20a           A triangle at (10,20) with linewidth 1 (a) and default size
+     t10,20e30         A triangle at (10,20) with linewidth 5 (e) and size 30
+</pre>
+
+  <p>
+    The second underscoore is the <tt>Flag</tt> field. It must always be a literal underscore.
+  </p>
+
+  <p>
+    The third underscoore is the <tt>Family</tt> field. It is only relevant for
+    Text and specifies the font-family
+    (Monospace, Serif, Sans-serif).
+  </p>
+
+
+  <p>
+    All fields, except <tt>Shape</tt>, are optional. However, sometimes fields
+    must be specified in order for subsequent fields to be parsed correctly.
+  </p>
+
+  <pre>
+     t10,20__,,15      A triangle at (10,20) rotated 15 degrees about the x-axis
+     t5k_25            A triangle at the (5,0) with linewidth 11 (k) rotated 25 degrees about the z-axis
+</pre>
+
+  <p>
+    The '<tt>Extra</tt>' field is used to hold additional data for the Circle, Multigon, and Text shapes.
+    For convenience, a dash '<tt>-</tt>' can be used to skip all remaining fields and begin the 'Extra' field.
+  </p>
+
+  <pre>
+     c10,20___45,90        Draw an arc from 45-90 degrees at (10,20)
+     c10,20-45,90          Draw an arc from 45-90 degrees at (10,20). '-' is used to skip to the 'Extra' field.
+     m10,20___1,1_9,1_1,9  Draw a multigon at (10,20)
+     m10,20-1,1_9,1_1,9    Draw a multigon at (10,20). '-' is used to skip to the 'Extra' field.
+     x10,20___Hello        Draw 'Hello' at (10,20)
+     x10,20-Hello          Draw 'Hello' at (10,20). '-' is used to skip to the 'Extra' field.
+</pre>
+
+
+  <p>
+    The left edge and bottom edge of the canvas that is drawn upon will be
+    automatically increased in order to display all shapes and text, however
+    the linewidth is not accounted for and will be clipped. You may wish to
+    use <tt>pad</tt> or <tt>dim</tt> to enlarge the canvas further to prevent
+    clipping.
+  </p>
+
+  <p>
+    If <tt>Offset</tt> is not specified (or is '0'), the shape will be drawn at (0,0), which
+    is located in the upper-left corner. Positive-x is down. Positive-y is right.
+  </p>
+
+  <p>
+    The maximum length of a Query String is browser-dependent. Many
+    browsers allow at least 8,000 characters and may allow 100,000 or more characters.
+  </p>
+
+  <h3>Examples</h3>
+
+  <table>
+    <tr>
+      <th>Image</th>
+      <th>Query String Parameter</th>
+      <th>Description</th>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?palette=1&polysize=50&textsize=17" /></td>
+      <td>?palette=1</td>
+      <td>Show full 24-color pallete. If the 'x', and/or 'z' colors have been defined they will also be displayed.</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?palette=2&polysize=50&textsize=17" /></td>
+      <td>?palette=2</td>
+      <td>Show reduced 11-color palette. This is a selected subset of the full palette and are the primary 'ROY G BIV' colors plus a few extra. The color-letters (mostly) match the color name.<br>
+        r=red<br>o=orange<br>y=yellow<br>g=green<br>b=blue<br>v=violet<br>w=white<br>p=pink<br>a=gray<br>n=brown<br>k=black</td>
+    </tr>
+
+    <tr>
+      <td><img class='pgon' data-src="?help=1&textsize=7" /></td>
+      <td>?help=1</td>
+      <td>Show help</td>
+    </tr>
+
+    <tr>
+      <td>
+        <img class='pgon' data-src="?z=l120,50_180&z=l50,90_140_90&z=sK65,75_40_,60&z=cR65,64_10&z=cY65,75_10&z=cG65,85_10&z=x110,30-Main-St.&z=x30,100__270_Oak-St.&pad=10">
+      </td>
+      <td>
+        ?z=l120,50_180&z=l50,90_140_90&z=sK65,75_40_,60&z=cR65,64_10&z=cY65,75_10&z=cG65,85_10&z=x110,30-Main-St.&z=x30,100__270_Oak-St.&pad=10
+      </td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>
+        <img class='pgon'
+          data-src="?scaleimg=0.6&z=sB250,126_500_,,60&z=sG250,240_500_,,85&z=cY0,0_150__0,90&z=cW320,60_55&z=cW360,40_55&z=cW390,60_55&z=cW430,40_55&z=sR190,175_90&z=sK203,198_45_,60&z=sW165,150_25&z=sW215,150_25&z=sW165,190_25&z=tK187,114_100_,,60" />
+      </td>
+      <td>?scaleimg=0.5&z=sB250,126_500_,,60&z=sG250,240_500_,,85&z=cY0,0_150__0,90&z=cW320,60_55&z=cW360,40_55&z=cW390,60_55&z=cW430,40_55&z=sR190,175_90&z=sK203,198_45_,60&z=sW165,150_25&z=sW215,150_25&z=sW165,190_25&z=tK187,114_100_,,60</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>
+        <img class='pgon'
+          data-src="?scaleimg=0.6&textsize=32&z=x120,20-Cabin-Names&z=sK150,200_80&z=xr110,130-Duck&z=sK270,150_80&z=xr300,80-Bear&z=sK180,320_80&z=xr250,370-Antelope&z=sK310,260_80&z=xr360,310-Couger&z=cB400,100_120&z=cB450,130_120&z=cB480,200_120&z=x430,110-Lake&z=cG-240,530_800&z=cG20,765_800&z=x70,400-Woods&dim=500,480" />
+      </td>
+      <td>
+        ?scaleimg=0.5&textsize=32&z=x120,20-Cabin-Names&z=sK150,200_80&z=xr110,130-Duck&z=sK270,150_80&z=xr300,80-Bear&z=sK180,320_80&z=xr250,370-Antelope&z=sK310,260_80&z=xr360,310-Couger&z=cB400,100_120&z=cB450,130_120&z=cB480,200_120&z=x430,110-Lake&z=cG-240,530_800&z=cG20,765_800&z=x70,400-Woods&dim=500,480
+      </td>
+      <td></td>
+    </tr>
+
+  </table>
+
+
+</body>
+
+</html>
