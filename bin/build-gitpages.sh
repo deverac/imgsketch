@@ -56,8 +56,8 @@ else
     rm -rf node_modules
     rm -rf spec
     rm -f LICENSE
-    rm -r package.json
-    rm -r package-lock.json
+    rm -f package.json
+    rm -f package-lock.json
     rm -f README.md
 
     # Add changes and commit branch
